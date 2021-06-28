@@ -1,5 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import StudentList from "./Components/StudentList";
+import io from "socket.io-client";
+
+const PORT = process.env.PORT || 4000;
+const socket = io.connect(`http://localhost:${PORT}`);
 
 const App = () => {
 	const [studentList, setStudentList] = useState([
@@ -33,6 +37,12 @@ const App = () => {
 		setStudentList(studentList.filter((student) => student !== firstStd));
 	};
 
+	const handleKeyPress = (e) => {
+		if (e.key === "Enter") {
+			handleCreate();
+		}
+	};
+
 	return (
 		<div>
 			<StudentList
@@ -41,7 +51,11 @@ const App = () => {
 			></StudentList>
 
 			<div>
-				<input onChange={handleChange}></input>
+				<input
+					onChange={handleChange}
+					value={inputState}
+					onKeyPress={handleKeyPress}
+				></input>
 				<button onClick={handleCreate}>추가</button>
 				<button onClick={handleRemove}>완료</button>
 			</div>
