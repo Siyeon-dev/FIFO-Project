@@ -41,7 +41,9 @@ const insertStdInfo = async (req, res, next) => {
 
 const getAllStudent = async (req, res) => {
 	try {
-		const student = await StudentList.find({});
+		const student = await StudentList.find({}, { stdName: 1 });
+		res.send(student);
+
 		console.log(student);
 	} catch (err) {
 		console.log(err);
@@ -61,6 +63,14 @@ const deleteStudent = async (req, res, next) => {
 	}
 };
 
+app.use(
+	cors({
+		method: ["GET", "POST"],
+		credentials: true,
+	})
+);
+
 app.get("/insertStudent", insertStdInfo, getAllStudent);
 app.get("/deleteStudent", deleteStudent, getAllStudent);
+app.get("/", getAllStudent);
 server.listen(PORT, handleListening);
