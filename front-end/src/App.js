@@ -38,7 +38,7 @@ const App = () => {
 		for (let student of state) {
 			tempStudentList.push(student.stdName);
 		}
-
+		console.log(tempStudentList);
 		setStudentList([...tempStudentList]);
 	}, [state]);
 
@@ -46,25 +46,30 @@ const App = () => {
 		axios
 			.get(`${URL}/insertStudent?stdName=${inputState}`)
 			.then((res) => {
-				console.log(res);
+				fetchData();
 			})
 			.catch((err) => {
 				console.log(err);
 			});
 
-		fetchData();
 		setInputState("");
+	};
+
+	const handleRemove = () => {
+		// 로그인 한 자신만 삭제할 수 있도록 예외 처리
+		// if (isFirstYourName() !== true) return false;
+		axios
+			.get(`${URL}/deleteStudent?stdName=${inputState}`)
+			.then((res) => {
+				fetchData();
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
 
 	const handleChange = (e) => {
 		setInputState(e.target.value);
-	};
-
-	const handleRemove = () => {
-		const firstStd = studentList[0];
-
-		if (isFirstYourName() !== true) return false;
-		setStudentList(studentList.filter((student) => student !== firstStd));
 	};
 
 	const handleKeyPress = (e) => {
