@@ -29,6 +29,9 @@ const App = () => {
 	};
 
 	useEffect(() => {
+		socket.on("resEvent", () => {
+			fetchData();
+		});
 		fetchData();
 	}, []);
 
@@ -42,11 +45,16 @@ const App = () => {
 		setStudentList([...tempStudentList]);
 	}, [state]);
 
+	const requestEvent = () => {
+		socket.emit("reqEvent");
+	};
+
 	const handleCreate = () => {
 		axios
 			.get(`${URL}/insertStudent?stdName=${inputState}`)
 			.then((res) => {
 				fetchData();
+				requestEvent();
 			})
 			.catch((err) => {
 				console.log(err);
@@ -62,6 +70,7 @@ const App = () => {
 			.get(`${URL}/deleteStudent?stdName=${inputState}`)
 			.then((res) => {
 				fetchData();
+				requestEvent();
 			})
 			.catch((err) => {
 				console.log(err);
