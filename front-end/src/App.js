@@ -4,6 +4,7 @@ import io from "socket.io-client";
 import axios from "axios";
 
 const PORT = process.env.PORT || 4000;
+const URL = `http://localhost:${PORT}`;
 const socket = io.connect(`http://localhost:${PORT}`);
 
 const App = () => {
@@ -15,18 +16,19 @@ const App = () => {
 	const isFirstYourName = () => {
 		return myName === studentList[0] ? true : false;
 	};
-	useEffect(() => {
-		async function fetchData() {
-			await axios
-				.get("http://localhost:4000")
-				.then((res) => {
-					setState(res.data);
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-		}
 
+	const fetchData = async () => {
+		await axios
+			.get(URL)
+			.then((res) => {
+				setState(res.data);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
+	useEffect(() => {
 		fetchData();
 	}, []);
 
@@ -41,10 +43,16 @@ const App = () => {
 	}, [state]);
 
 	const handleCreate = () => {
-		let newStdList = studentList;
-		newStdList.push(inputState);
+		axios
+			.get(`${URL}/insertStudent?stdName=${inputState}`)
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 
-		setStudentList(newStdList);
+		fetchData();
 		setInputState("");
 	};
 
