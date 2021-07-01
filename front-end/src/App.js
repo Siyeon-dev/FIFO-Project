@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import DashBoard from "./Components/DashBoard";
 import Login from "./Components/Login";
 import { Route } from "react-router-dom";

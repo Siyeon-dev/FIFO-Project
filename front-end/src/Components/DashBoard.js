@@ -29,7 +29,6 @@ const DashBoard = () => {
 	};
 
 	useEffect(() => {
-		login();
 		socket.on("resEvent", () => {
 			fetchData();
 		});
@@ -62,12 +61,6 @@ const DashBoard = () => {
 			});
 
 		setInputState("");
-	};
-
-	const login = () => {
-		axios.get(`${URL}/google`).then((res) => {
-			console.dir(res);
-		});
 	};
 
 	const handleRemove = () => {
