@@ -4,6 +4,8 @@ import io from "socket.io-client";
 import axios from "axios";
 import { UserDataContext } from "../store/UserDataStore";
 import { useHistory } from "react-router-dom";
+import "./DashBoard.css";
+import "./StudentList.css";
 
 const PORT = process.env.PORT || 4000;
 const URL = `http://localhost:${PORT}`;
@@ -102,19 +104,24 @@ const DashBoard = () => {
 	};
 
 	return (
-		<div>
+		<div className='dashBoard'>
 			{userInfo === undefined ? (
-				<h1>세션이 만료되었습니다. 다시 로그인 해주세요 🥲</h1>
+				<h1>
+					세션이 만료되었습니다.
+					<br />
+					다시 로그인 해주세요 🥲
+				</h1>
 			) : (
 				<h1>안녕하세요 {userInfo}님 😄</h1>
 			)}
-			<h1>정영철 교수님 면담 리스트</h1>
-			<StudentList
-				studentList={studentList}
-				setStudentList={setStudentList}
-			></StudentList>
-
-			<div>
+			<div className='studentList'>
+				<h1 className='studentList-title'>학생 리스트</h1>
+				<StudentList
+					studentList={studentList}
+					setStudentList={setStudentList}
+				></StudentList>
+			</div>
+			<div className='dashBoard-selector'>
 				{/* <input
 					onChange={handleChange}
 					value={inputState}

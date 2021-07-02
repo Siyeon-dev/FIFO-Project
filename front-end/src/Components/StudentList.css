@@ -1,0 +1,11 @@
+.studentList {
+	width: 100%;
+	background-color: antiquewhite;
+	margin-bottom: 30px;
+}
+.studentList-title {
+	margin: 10px 0px;
+	width: 100%;
+	text-align: center;
+	border-bottom: 1px solid burlywood;
+}
