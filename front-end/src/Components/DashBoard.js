@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import StudentList from "./StudentList";
 import io from "socket.io-client";
 import axios from "axios";
+import { UserDataContext } from "../store/UserDataStore";
 
 const PORT = process.env.PORT || 4000;
 const URL = `http://localhost:${PORT}`;
@@ -11,10 +12,10 @@ const DashBoard = () => {
 	const [studentList, setStudentList] = useState([]);
 	const [inputState, setInputState] = useState("");
 	const [state, setState] = useState([]);
-	const myName = "박시연";
+	const { userInfo, handlerSetUserInfo } = useContext(UserDataContext);
 
 	const isFirstYourName = () => {
-		return myName === studentList[0] ? true : false;
+		return userInfo === studentList[0] ? true : false;
 	};
 
 	const fetchData = async () => {
@@ -51,7 +52,7 @@ const DashBoard = () => {
 
 	const handleCreate = () => {
 		axios
-			.get(`${URL}/insertStudent?stdName=${inputState}`)
+			.get(`${URL}/insertStudent?stdName=${userInfo}`)
 			.then((res) => {
 				fetchData();
 				requestEvent();
