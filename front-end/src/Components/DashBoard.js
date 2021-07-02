@@ -65,10 +65,9 @@ const DashBoard = () => {
 	};
 
 	const handleRemove = () => {
-		// 로그인 한 자신만 삭제할 수 있도록 예외 처리
-		// if (isFirstYourName() !== true) return false;
+		if (isFirstYourName() !== true) return false;
 		axios
-			.get(`${URL}/deleteStudent?stdName=${inputState}`)
+			.get(`${URL}/deleteStudent?stdName=${userInfo}`)
 			.then((res) => {
 				fetchData();
 				requestEvent();

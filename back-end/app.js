@@ -30,6 +30,12 @@ const insertStdInfo = async (req, res, next) => {
 		query: { stdName },
 	} = req;
 
+	const isUserExist = await StudentList.findOne({
+		stdName,
+	});
+
+	if (isUserExist !== null || stdName === "undefined") return;
+
 	try {
 		const student = await StudentList.create({
 			stdName,
