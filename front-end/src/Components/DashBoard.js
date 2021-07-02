@@ -3,6 +3,7 @@ import StudentList from "./StudentList";
 import io from "socket.io-client";
 import axios from "axios";
 import { UserDataContext } from "../store/UserDataStore";
+import { useHistory } from "react-router-dom";
 
 const PORT = process.env.PORT || 4000;
 const URL = `http://localhost:${PORT}`;
@@ -13,6 +14,7 @@ const DashBoard = () => {
 	const [inputState, setInputState] = useState("");
 	const [state, setState] = useState([]);
 	const { userInfo, handlerSetUserInfo } = useContext(UserDataContext);
+	const history = useHistory();
 
 	const isFirstYourName = () => {
 		return userInfo === studentList[0] ? true : false;
@@ -77,6 +79,18 @@ const DashBoard = () => {
 			});
 	};
 
+	const handleCancel = () => {
+		axios
+			.get(`${URL}/deleteStudent?stdName=${userInfo}`)
+			.then((res) => {
+				fetchData();
+				requestEvent();
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
 	const handleChange = (e) => {
 		setInputState(e.target.value);
 	};
@@ -89,20 +103,34 @@ const DashBoard = () => {
 
 	return (
 		<div>
+			{userInfo === undefined ? (
+				<h1>세션이 만료되었습니다. 다시 로그인 해주세요 🥲</h1>
+			) : (
+				<h1>안녕하세요 {userInfo}님 😄</h1>
+			)}
+			<h1>정영철 교수님 면담 리스트</h1>
 			<StudentList
 				studentList={studentList}
 				setStudentList={setStudentList}
 			></StudentList>
 
 			<div>
-				<input
+				{/* <input
 					onChange={handleChange}
 					value={inputState}
 					onKeyPress={handleKeyPress}
-				></input>
-				<button onClick={handleCreate}>추가</button>
-				<button onClick={handleRemove}>완료</button>
+				></input> */}
+				<button onClick={handleCreate}>등록하기</button>
+				<button onClick={handleRemove}>면담완료</button>
+				<button onClick={handleCancel}>취소하기</button>
 			</div>
+			<button
+				onClick={() => {
+					history.push({ pathname: "/" });
+				}}
+			>
+				로그인 화면으로
+			</button>
 		</div>
 	);
 };
