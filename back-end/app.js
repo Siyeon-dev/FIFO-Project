@@ -1,85 +1,15 @@
-const StudentList = require("./models/StudentList");
-require("./db");
-const app = require("express")();
-const server = require("http").createServer(app);
-const dotenv = require("dotenv");
-const cors = require("cors");
-const io = require("socket.io")(server, {
-	cors: {
-		origin: "*",
-		credentials: true,
-	},
-});
+import express from "express";
+import morgan from "morgan";
+import helmet from "helmet";
+import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
 
-dotenv.config();
+const app = express();
 
-const PORT = process.env.PORT;
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(cookieParser());
+app.use(bodyParser.json({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(morgan("dev"));
 
-io.on("connection", (socket) => {
-	socket.on("reqEvent", () => {
-		console.log("hello");
-		io.emit("resEvent", {});
-	});
-});
-
-const handleListening = () =>
-	console.log(`✅ Listening on: http://localhost:${PORT}`);
-
-const insertStdInfo = async (req, res, next) => {
-	const {
-		query: { stdName },
-	} = req;
-
-	const isUserExist = await StudentList.findOne({
-		stdName,
-	});
-
-	if (isUserExist !== null || stdName === "undefined") return;
-
-	try {
-		const student = await StudentList.create({
-			stdName,
-		});
-
-		console.log(student);
-		next();
-	} catch (err) {
-		console.log(err);
-	}
-};
-
-const getAllStudent = async (req, res) => {
-	try {
-		const student = await StudentList.find({}, { stdName: 1 });
-		res.send(student);
-
-		console.log(student);
-	} catch (err) {
-		console.log(err);
-	}
-};
-
-const deleteStudent = async (req, res, next) => {
-	const {
-		query: { stdName },
-	} = req;
-
-	try {
-		await StudentList.findOneAndRemove({ stdName: stdName });
-		next();
-	} catch (err) {
-		console.log(err);
-	}
-};
-
-app.use(
-	cors({
-		method: ["GET", "POST"],
-		credentials: true,
-	})
-);
-
-app.get("/insertStudent", insertStdInfo, getAllStudent);
-app.get("/deleteStudent", deleteStudent, getAllStudent);
-app.get("/", getAllStudent);
-server.listen(PORT, handleListening);
+export default app;
