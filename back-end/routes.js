@@ -1,4 +1,5 @@
 // GLOBAL
+const HOME = "/";
 const JOIN = "/join";
 const LOGIN = "/login";
 const LOGOUT = "/logout";
@@ -19,6 +20,7 @@ const DELETE_CLASS = "/:id/delete-class";
 const EDIT_CLASS = "/:id/edit-class";
 
 const routes = {
+	home: HOME,
 	join: JOIN,
 	login: LOGIN,
 	logout: LOGOUT,
